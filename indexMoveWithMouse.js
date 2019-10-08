@@ -125,33 +125,33 @@ const clear = () =>{
 var mouseX =0
 var mouseY = 0
 
+window.addEventListener('mousemove',function(e){
+    // console.log('Mouse move',e.clientX,e.clientY)
+    
+    var percentX = e.clientX/window.innerWidth // 0~1
+    var percentY = e.clientY/window.innerHeight
+    
+    percentX = percentX * 2 - 1 //-1~1
+    percentY = percentY * 2 - 1
 
-window.addEventListener('mousemove',function(event){
-    console.log('Mouse move',event,event.clientX,event.clientY)
-    var percentX = event.clientX/ window.innerWidth;
-    percentX = 2*percentX-1 // -1~ 1
-    
-    var percentY = event.clientY/ window.innerHeight;
-    percentY = 2*percentY-1 // same
-    
+    var moveRange = 2
+    mouseX = - percentX*moveRange
+    mouseY = percentY * moveRange
 })
+
+
 function render(){ // draw()
 
     let cameraRadius = 3.0
-    // mouseX = percentX *cameraRadius
-    // mouseY = percentY *cameraRadius
-
-    /*/
-    let cameraX = mouseX
-    let cameraZ = mouseY
     
-    /*/
     let cameraX = Math.sin(currTime)*cameraRadius
     let cameraZ = Math.cos(currTime)*cameraRadius
-    //*/
-
     // console.log(cameraX)
-    mat4.lookAt(viewMatrix, [cameraX,0,cameraZ], [0,0,0], [0,1,0]) 
+    // mat4.lookAt(viewMatrix, [cameraX,0,cameraZ], [0,0,0], [0,1,0]) 
+    
+
+    mat4.lookAt(viewMatrix, [mouseX,mouseY,3], [0,0,0], [0,1,0]) 
+
     // out eye(pos of camera) center up
 
     currTime+=0.01;
