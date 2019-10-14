@@ -100,7 +100,8 @@ void main(){
     vec3 white = vec3(1.0,1.0,1.0);
     vec3 black = vec3(0.0,0.0,0.0);
 
-    finalColor = mix(black,pink,vYPosition);
+    float temp = clamp(vYPosition,0.,1.); // restrain the value
+    finalColor = mix(black,pink,temp);
     gl_FragColor = vec4(finalColor,1.0);
 }`
 
