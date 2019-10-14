@@ -148,13 +148,13 @@ window.addEventListener('mousemove', function (e) {
 
 
 let trace = true
-var num = 30
+var num = 1
 var start = - num / 2
 
 function render() { // draw()
 
     let cameraRadius = 3.0
-    mat4.lookAt(viewMatrix, [mouseX, mouseY, 20], [0, 0, 0], [0, 1, 0]) // distance
+    mat4.lookAt(viewMatrix, [0,0, 2], [0, 0, 0], [0, 1, 0]) // distance
 
     // out eye(pos of camera) center up
 

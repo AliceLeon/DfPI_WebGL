@@ -30,9 +30,9 @@ void main(){
    
 
     float angle = cos(uTranslate.x+uTranslate.y-uTime);
-    pos.xy = rotate(pos.xy,angle);
+    // pos.xy = rotate(pos.xy,angle);
 
-    pos+=+ uTranslate;
+    // pos+=+ uTranslate;
 
     gl_Position = uProjectionMatrix * uViewMatrix*vec4(pos,1.0);
     vColor = aColor;
