@@ -102,7 +102,7 @@ void main(){
 
     float temp = clamp(vYPosition,0.,1.); // restrain the value
     finalColor = mix(black,pink,temp);
-    gl_FragColor = vec4(finalColor,1.0);
+    gl_FragColor = vec4(finalColor,1.);
 }`
 
 var vertexShader = `
