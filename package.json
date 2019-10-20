@@ -26,6 +26,8 @@
     "start05": "budo index05.js --live -- -t babelify",
     "start06": "budo index06.js --live -- -t babelify",
     "start07": "budo index07.js --live -- -t babelify",
+    "start08": "budo index08.js --live -- -t babelify",
+    "start09": "budo index09.js --live -- -t babelify",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
