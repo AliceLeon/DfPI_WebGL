@@ -5,8 +5,8 @@ const loadObj = require('./utils/loadObj.js')
 console.log(loadObj)
 
 
-const vertexShader = glslify('./shaders/shaderVertex08.glsl')
-const fragShader = glslify('./shaders/shaderFrag08.glsl')
+const vertexShader = glslify('./shaders/shaderVertex10.glsl')
+const fragShader = glslify('./shaders/shaderFrag10.glsl')
 
 var mat4 = glm.mat4
 let currTime = 0
@@ -24,7 +24,7 @@ mat4.lookAt(viewMatrix, [0, 0, 2], [0, 0, 0], [0, 1, 0]) // out eye center up
 
 var drawCube
 
-loadObj('./assets/sphere2.obj', function (obj) {
+loadObj('./assets/5.obj', function (obj) {
     console.log('fuck loaded', obj)
     // create the attributes
     var attributes = {
@@ -107,7 +107,8 @@ function render() { // draw()
                         projection: projectionMatrix,
                         view: viewMatrix,
                         translate: [-start + i*scale , -start + j*scale , -start + k*scale ],
-                        color: [1,j/num,k/num]
+                        // color: [1,j/num,k/num]
+                        color: [1,1,1]
                     }
                     drawCube(obj)
                 }

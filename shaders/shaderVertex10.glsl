@@ -12,6 +12,7 @@ varying float vShade;
 varying vec3 vPosition;
 varying vec2 vUV;
 varying vec3 vColor;
+varying float r;
 
 float mod289(float x){return x - floor(x * (1.0 / 289.0)) * 289.0;}
 vec4 mod289(vec4 x){return x - floor(x * (1.0 / 289.0)) * 289.0;}
@@ -135,12 +136,35 @@ void main(){
     vec3 pos = aPosition;
     // vPosition = aPosition;
     // vPosition = vPosition/100.+.5;
-    pos*=0.2;
-    float noise = noise(aPosition+uTime*0.5);
+
+
+    float timetemp = uTime*0.1;
+
+    float circleScale = 0.1;
+    float twistScale = 2.5;
+    pos.y*=circleScale;
+    // pos.xz*=0.4;
+    float temp = pos.y+1.;
+    float newx = pos.x*circleScale+1.*twistScale*(1.+sin(temp+timetemp*10.));
+    float newz = pos.z*circleScale+1.*twistScale*(1.+cos(temp+timetemp*10.));
+    pos.x = newx;
+    pos.z = newz;
+    
+    r = (10.+pos.y)/10.;
+    
+    float noiseScale = 0.01;
+    // float noiseSize = 10.;
+
+    float noise1 = noise(vec3(aPosition.x,aPosition.z,timetemp));
+    float noise = noise(vec3(aPosition.x*noiseScale,
+    aPosition.z*noiseScale-timetemp
+    ,noise1));
     vShade = noise;
     vColor = normalize(pos);
-    vPosition = aPosition;
+    
+    // vPosition = aPosition;
     pos= pos*(0.9+noise*0.1);
+
     gl_Position = uProjectionMatrix * uViewMatrix*vec4(pos,1.0);
     vUV = aUV;
 

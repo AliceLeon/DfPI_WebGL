@@ -28,6 +28,10 @@
     "start07": "budo index07.js --live -- -t babelify",
     "start08": "budo index08.js --live -- -t babelify",
     "start09": "budo index09.js --live -- -t babelify",
+    "start10": "budo index10.js --live -- -t babelify",
+    "texture": "budo texture.js --live -- -t babelify",
+    "line": "budo element.js --live -- -t babelify",
+    "uv": "budo indexLoadUVObj.js --live -- -t babelify",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
