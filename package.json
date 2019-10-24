@@ -6,9 +6,12 @@
   "dependencies": {
     "@babel/core": "^7.6.2",
     "babelify": "^10.0.0",
+    "bunny": "^1.0.1",
     "geom-parse-obj": "^1.0.0",
     "gl-matrix": "^3.1.0",
-    "regl": "^1.3.13"
+    "glsl-solid-wireframe": "^1.0.1",
+    "regl": "^1.3.13",
+    "regl-camera": "^2.1.1"
   },
   "devDependencies": {
     "glslify": "^7.0.0"
@@ -29,7 +32,9 @@
     "start08": "budo index08.js --live -- -t babelify",
     "start09": "budo index09.js --live -- -t babelify",
     "start10": "budo index10.js --live -- -t babelify",
+    "start11": "budo index11.js --live -- -t babelify",
     "texture": "budo texture.js --live -- -t babelify",
+    "wire": "budo wireframe.js --live -- -t babelify",
     "line": "budo element.js --live -- -t babelify",
     "uv": "budo indexLoadUVObj.js --live -- -t babelify",
     "test": "echo \"Error: no test specified\" && exit 1"

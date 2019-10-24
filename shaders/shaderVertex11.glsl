@@ -7,11 +7,20 @@ uniform mat4 uProjectionMatrix;
 uniform mat4 uViewMatrix;
 uniform vec3 uTranslate;
 uniform vec3 uColor;
+uniform float uR;
+uniform float uMouse;
 
 varying float vShade;
 varying vec3 vPosition;
 varying vec2 vUV;
 varying vec3 vColor;
+float rand(float n){return fract(sin(n) * 43758.5453123);}
+
+float noise(float p){
+	float fl = floor(p);
+  float fc = fract(p);
+	return mix(rand(fl), rand(fl + 1.0), fc);
+}
 
 float mod289(float x){return x - floor(x * (1.0 / 289.0)) * 289.0;}
 vec4 mod289(vec4 x){return x - floor(x * (1.0 / 289.0)) * 289.0;}
@@ -130,17 +139,34 @@ float cnoise(vec3 P){
   float n_xyz = mix(n_yz.x, n_yz.y, fade_xyz.x); 
   return 2.2 * n_xyz;
 }
+vec2 rotate(vec2 v, float a) {
+	float s = sin(a);
+	float c = cos(a);
+	mat2 m = mat2(c, -s, s, c);
+	return m * v;
+}
 
 void main(){
     vec3 pos = aPosition;
     // vPosition = aPosition;
     // vPosition = vPosition/100.+.5;
-    pos*=0.1;
-    float noise = noise(aPosition+uTime*0.5);
+    pos*=uR*0.01;
+    // float noise = noise(aPosition+uTime*0.5);
+    float noise = noise(uR/10.+uTime*0.5);
     vShade = noise;
+
     vColor = normalize(pos);
+
+    float temp = (vColor.x+vColor.y+vColor.z)*(vColor.x+vColor.y+vColor.z)/4.;
+
+    vColor = vec3(temp,temp,temp);
+
     vPosition = aPosition;
-    pos= pos*(0.9+noise*0.1);
+    // vec3 rotate(vec3 v, vec3 axis, float angle)
+    pos.xy = rotate(pos.xy,1.57);
+    pos.xz = rotate(pos.xz,-sin(uMouse/50.-uR/10.)*1.57/2.+1.57);
+    // pos= pos*(0.9+noise*0.1);
+    pos+=uTranslate*2.;
     gl_Position = uProjectionMatrix * uViewMatrix*vec4(pos,1.0);
     vUV = aUV;
 

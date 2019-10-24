@@ -5,8 +5,8 @@ const loadObj = require('./utils/loadObj.js')
 console.log(loadObj)
 
 
-const vertexShader = glslify('./shaders/shaderVertex10.glsl')
-const fragShader = glslify('./shaders/shaderFrag10.glsl')
+const vertexShader = glslify('./shaders/shaderVertex11.glsl')
+const fragShader = glslify('./shaders/shaderFrag11.glsl')
 
 var mat4 = glm.mat4
 let currTime = 0
@@ -24,7 +24,7 @@ mat4.lookAt(viewMatrix, [0, 0, 2], [0, 0, 0], [0, 1, 0]) // out eye center up
 
 var drawCube
 
-loadObj('./assets/5.obj', function (obj) {
+loadObj('./assets/semi.obj', function (obj) {
     console.log('fuck loaded', obj)
     // create the attributes
     var attributes = {
@@ -40,24 +40,26 @@ loadObj('./assets/5.obj', function (obj) {
             uProjectionMatrix: regl.prop('projection'),
             uViewMatrix: regl.prop('view'),
             uTranslate: regl.prop('translate'),
-            uColor: regl.prop('color')
+            uColor: regl.prop('color'),
+            uR: regl.prop('r'),
+            uMouse: regl.prop('mouseView')
         },
         vert: vertexShader,
         frag: fragShader,
         attributes: attributes,
         count: obj.count,
-    depth: {
-        enable: true // 透明
-    },
-    blend: {
-        enable: true,
-        func: {
-            srcRGB: 'src alpha',
-            srcAlpha: 'src alpha',
-            dstRGB: 'one minus src alpha',
-            dstAlpha: 'one minus src alpha',
+        depth: {
+            enable: true // 透明
         },
-    }
+        blend: {
+            enable: true,
+            func: {
+                srcRGB: 'src alpha',
+                srcAlpha: 'src alpha',
+                dstRGB: 'one minus src alpha',
+                dstAlpha: 'one minus src alpha',
+            },
+        }
     })
 })
 
@@ -86,35 +88,65 @@ function clear() {
 
 function render() { // draw()
     currTime += 0.01;
-    //*/
-    mat4.lookAt(viewMatrix, [mouseX, mouseY, 30], [0, 0, 0], [0, 1, 0]) // distance
-    /*/
-    mat4.lookAt(viewMatrix, [0, 0, 15], [0, 0, 0], [0, 1, 0]) // distance
-    //*/
+    mat4.lookAt(viewMatrix, [0,0, 30], [0, 0, 0], [0, 1, 0]) // distance
 
     clear() // make sure you clear first
-
+    
+    /*/
     // render is faster so it takes time to drawCube
     if (drawCube != undefined) {
-        let num = 1;
+        let num = 5;
+        let num2 = 5;
+        let scale = 1;
+        let r = 2;
+        let start = num / 2 * scale - 1;
+        for (let i = 0; i < num; i++) {
+            for (let j = 0; j < num2; j++) {
+                // for (let k = 0; k < num; k++) {
+                let temp = parseFloat(i / num);
+                var obj = {
+                    time: currTime,
+                    projection: projectionMatrix,
+                    view: viewMatrix,
+                    translate:
+                        [(1. + i / 2) * Math.sin(i / num * 2 * Math.PI + currTime  + i * .1+ j *  2* Math.PI / num2),
+                        i * scale / 5,
+                        // 0,
+                        (1. + i / 2) * Math.cos(i / num * 2 * Math.PI + currTime + i *.1 + j * 2 * Math.PI / num2)
+                        ],
+                    color: [1, 0, 0]
+                }
+                drawCube(obj)
+                // }
+            }
+        }
+    }
+    /*/
+    if (drawCube != undefined) {
+        let num = 100;
+        let num2 = 2;
         let scale = 2;
         let start = num / 2*scale -1;
         for (let i = 0; i < num; i++) {
-            for (let j = 0; j < num; j++) {
-                for (let k = 0; k < num; k++) {
+            for (let j = 0; j < num2; j++) {
+                // for (let k = 0; k < num; k++) {
                     var obj = {
                         time: currTime,
                         projection: projectionMatrix,
                         view: viewMatrix,
-                        translate: [-start + i*scale , -start + j*scale , -start + k*scale ],
+                        // translate: [-start + i*scale , -start + j*scale , -start + k*scale ],
+                        translate: [-start + j*scale*10,0, -start + i*scale/50. ],
                         // color: [1,j/num,k/num]
-                        color: [1,1,1]
+                        color: [i/num,1,1],
+                        r: i+15,
+                        mouseView: mouseX
                     }
                     drawCube(obj)
                 }
             }
-        }
+        // }
     }
+    //*/
 
     window.requestAnimationFrame(render);
 
