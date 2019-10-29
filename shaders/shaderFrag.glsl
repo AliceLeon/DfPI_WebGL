@@ -79,13 +79,13 @@ void main(){
     */
 
     float noiseValueBase = noise(vec3(uTime*2.0,vUV*3.0));
-    float noiseValue = fbm(vec3(vUV*5.0,uTime));
+    float noiseValue = fbm(vec3(vUV*1.0,uTime));
     vec3 pink = vec3(1.0,0.8,0.8);
     vec3 blue = vec3(220./255.,1.0,1.0);
     vec3 white = vec3(1.0,1.0,1.0);
     vec3 black = vec3(0.0,0.0,0.0);
 
-    // vec3 finalColor = mix(white,black,noiseValue);
+    vec3 finalColor = mix(pink,blue,noiseValue);
     // finalColor*=noiseValue;
 
     gl_FragColor = vec4(vec3(noiseValue),1.0);

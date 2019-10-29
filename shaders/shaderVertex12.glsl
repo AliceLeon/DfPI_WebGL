@@ -1,6 +1,8 @@
 precision lowp float;
 attribute vec3 aPosition;
 attribute vec2 aUV;
+attribute vec3 aTranslate;
+attribute float aR;
 
 uniform float uTime;
 uniform mat4 uProjectionMatrix;
@@ -11,12 +13,16 @@ uniform float uR;
 uniform float uMouse;
 uniform float uMouseVX;
 uniform float uMouseVY;
-uniform float uTotal;
 
+varying float vTotal;
 varying float vShade;
 varying vec3 vPosition;
 varying vec2 vUV;
 varying vec3 vColor;
+varying float vcurrentR;
+
+const float PI = 3.141592653;
+
 float rand(float n) { return fract(sin(n) * 43758.5453123); }
 
 float noise(float p) {
@@ -154,38 +160,65 @@ vec2 rotate(vec2 v, float a) {
   return m * v;
 }
 
+float map(float value, float start, float end, float newStart, float newEnd) {
+  float percent = (value - start) / (end - start);
+  if (percent < 0.0) {
+    percent = 0.0;
+  }
+  if (percent > 1.0) {
+    percent = 1.0;
+  }
+  float newValue = newStart + (newEnd - newStart) * percent;
+  return newValue;
+}
+
 void main() {
-  vec3 pos = aPosition;
-  // vPosition = aPosition;
-  // vPosition = vPosition/100.+.5;
-  pos *= uR * 0.01;
-  // float noise = noise(aPosition+uTime*0.5);
-  float noise = noise(uR / 10. + uTime * 0.5);
-  vShade = noise;
-
+  float weirdTemp = clamp(map(uTime - 1., 0., 1., 0., 10.), 0., 10.);
+  float weirdWave = clamp(map(uTime - 1., 0., 5., 0., 10.), 50., 10.);
+  float weirdX = clamp(map(uTime - 1., 0., 5., 0., 10.), 10., 0.);
+  vec3 pos = aPosition * (10. + aR) * 0.01;
+  vTotal = weirdTemp * 2.;
+  vcurrentR = aR;
   vColor = normalize(pos);
-
   float temp =
       (vColor.x + vColor.y + vColor.z) * (vColor.x + vColor.y + vColor.z) / 4.;
-
   vColor = vec3(temp, temp, temp);
 
-  vPosition = aPosition;
   //*/
-  // vec3 rotate(vec3 v, vec3 axis, float angle)
   pos.xy = rotate(pos.xy, 1.57);
-  // uMouse/50 - uTime / uTime/1.
-  pos.xz = rotate(
-      pos.xz,
-      -sin(uTime * .2 - aPosition.y / 1.) * 1.57 * aPosition.y / 10. + 1.57); //
 
-  // pos.xy = rotate(pos.xy,-uMouseVY/50.);
-  // pos.xz = rotate(pos.xz,-uMouseVX/50.);
+  // pos.xz = rotate(pos.xz,sin(uTime+pos.y/2.+aR/2.)*1.57*pos.y/10.+1.57*1.);
+  // pos.xz = rotate(pos.xz, sin(uTime + pos.y / 2. + aR / 2.) * 1.57 * pos.y / 10.);
+  pos.xz = rotate(pos.xz, sin(uTime + pos.y / 2. + aR / 2.) 
+  * 1.57 * pos.y /  map(uTime, 0., PI/2., 500., 10.));
+  // +1.57 * 2.
 
-  pos.xy = rotate(pos.xy, -(-5. + uTime * 5.) / 50.);
-  pos.xz = rotate(pos.xz, -uTime * 50. / 50.);
-  
-  pos += uTranslate * 2.;
+  pos += aTranslate;
+  // pos.yz = rotate(pos.yz, -uMouseVY / 50.);
+  // pos.xz = rotate(pos.xz, -uMouseVX / 60.);
+
+  float temp1;
+  if(uTime>=PI){
+    temp1 = 100.+uTime*map(uTime, PI, 4., 0., 50.);
+  }else{
+    temp1 = (100.*sin(-PI/2.+uTime));
+  }
+
+  pos.yz = rotate(pos.yz, temp1/ 50.);
+  pos.xz = rotate(pos.xz, temp1/ 60.);
+
+  // pos.yz = rotate(pos.yz, 100.*sin(-1.57+uTime)/50.);
+  // pos.xz = rotate(pos.xz, 100.*sin(-1.57+uTime)/60.);
+
+  /*/
+pos += aTranslate;
+pos.xy = rotate(pos.xy, 1.57);
+pos.xz = rotate(pos.xz, +sin(uTime + aR / 7.) * 1.57 * aR / 10. + 1.57);
+//*/
+
+  // float noise = noise(vec3(pos.x,pos.y,pos.z+uTime*0.01));
+  // vShade = noise;
+  // pos*=(1.+noise*0.01);
   gl_Position = uProjectionMatrix * uViewMatrix * vec4(pos, 1.0);
   vUV = aUV;
 }

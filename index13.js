@@ -5,8 +5,8 @@ const loadObj = require('./utils/loadObj.js')
 console.log(loadObj)
 
 
-const vertexShader = glslify('./shaders/shaderVertex11.glsl')
-const fragShader = glslify('./shaders/shaderFrag11.glsl')
+const vertexShader = glslify('./shaders/shaderVertex13.glsl')
+const fragShader = glslify('./shaders/shaderFrag13.glsl')
 
 var mat4 = glm.mat4
 let currTime = 0
@@ -42,10 +42,7 @@ loadObj('./assets/semi.obj', function (obj) {
             uTranslate: regl.prop('translate'),
             uColor: regl.prop('color'),
             uR: regl.prop('r'),
-            uMouse: regl.prop('mouseView'),
-            uTotal: regl.prop('total'),
-            uMouseVX: regl.prop('mouseVX'),
-            uMouseVY: regl.prop('mouseVY')
+            uMouse: regl.prop('mouseView')
         },
         vert: vertexShader,
         frag: fragShader,
@@ -66,22 +63,8 @@ loadObj('./assets/semi.obj', function (obj) {
     })
 })
 
-function map (value, start, end, newStart, newEnd) {
-    var percent = (value - start) / (end - start)
-    if (percent < 0) {
-      percent = 0
-    }
-    if (percent > 1) {
-      percent = 1
-    }
-    var newValue = newStart + (newEnd - newStart) * percent
-    return newValue
-  }
-
 var mouseX = 0
 var mouseY = 0
-
-var intMouse
 
 window.addEventListener('mousemove', function (e) {
     // console.log('Mouse move',e.clientX,e.clientY)
@@ -93,9 +76,6 @@ window.addEventListener('mousemove', function (e) {
     percentY = percentY * 2 - 1
 
     var moveRange = 100//10
-    intMouse = parseInt(mouseX, 10)
-    intMouse = map(intMouse,-50,50,1,100)
-    // console.log(intMouse)
     mouseX = - percentX * moveRange
     mouseY = percentY * moveRange
 })
@@ -108,7 +88,7 @@ function clear() {
 
 function render() { // draw()
     currTime += 0.01;
-    mat4.lookAt(viewMatrix, [0,0, 6-5*Math.sin(currTime/10.)], [0, 0, 0], [0, 1, 0]) // distance
+    mat4.lookAt(viewMatrix, [0,0, 60-currTime*2], [0, 0, 0], [0, 1, 0]) // distance
 
     clear() // make sure you clear first
     
@@ -143,13 +123,10 @@ function render() { // draw()
     }
     /*/
     if (drawCube != undefined) {
-        let num = 20;
+        let num = 80;
         let num2 = 1;
         let scale = 2;
-        let start1 = num / 2*scale -1;
-        let start2 = num2 / 2*scale-1;
-        // let centerR = map(num/10,0,10,10,1);
-        // console.log(centerR);
+        let start = num / 2*scale -1;
         for (let i = 0; i < num; i++) {
             for (let j = 0; j < num2; j++) {
                 // for (let k = 0; k < num; k++) {
@@ -158,14 +135,11 @@ function render() { // draw()
                         projection: projectionMatrix,
                         view: viewMatrix,
                         // translate: [-start + i*scale , -start + j*scale , -start + k*scale ],
-                        translate: [0, 0 , -start1 + i*scale/50. ], // -start2 + j*scale*10
+                        translate: [ j*scale*10,0, -start + i*scale/50. ],
                         // color: [1,j/num,k/num]
                         color: [i/num,1,1],
-                        r: i+1,
-                        mouseView: mouseX,// 50*Math.sin(currTime),
-                        mouseVX: mouseX,// 50*Math.sin(currTime),
-                        mouseVY: mouseY,
-                        total: num
+                        r: i*1.2+3,
+                        mouseView: 50 * Math.sin(currTime),
                     }
                     drawCube(obj)
                 }
