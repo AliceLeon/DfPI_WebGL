@@ -167,7 +167,7 @@ void main(){
     pos.xz = rotate(pos.xz,-sin(uTime*2.-uR/10.)*1.57/2.+uTime);
     // pos= pos*(0.9+noise*0.1);
 
-    pos.xy = rotate(pos.xy,uTime/10.);
+    // pos.xy = rotate(pos.xy,uTime/10.); // i shoud have this
     // pos.xy = rotate(pos.xy,uTime);
     pos+=uTranslate*2.;
     gl_Position = uProjectionMatrix * uViewMatrix*vec4(pos,1.0);

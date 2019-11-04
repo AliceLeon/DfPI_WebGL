@@ -2,8 +2,31 @@ const regl = require('regl')()
 const glm = require('gl-matrix') // returns an object
 var glslify = require('glslify');
 const loadObj = require('./utils/loadObj.js')
-console.log(loadObj)
+// console.log(loadObj)
 
+const io = require('socket.io-client')
+
+// PUT YOUR IP HERE TOO
+const socket = io('http://10.97.151.115:9876')
+
+socket.on('testFromServer',function(obj){
+    if(Math.random()>0.99){
+        console.log('data recieved',obj)
+    }
+    
+})
+
+socket.on('cameramove', function (o) {
+   
+  mat4.copy(viewMatrix, o.view) 
+//   console.log(o.view)
+})
+
+// socket.on('tilt', function (o) {
+//   console.log('on tilt', o)
+// })
+
+console.log('here')
 
 const vertexShader = glslify('./shaders/shaderVertex13.glsl')
 const fragShader = glslify('./shaders/shaderFrag13.glsl')
@@ -20,7 +43,7 @@ var aspect = window.innerWidth / window.innerHeight
 mat4.perspective(projectionMatrix, fov, aspect, 0.01, 1000.)
 
 var viewMatrix = mat4.create()
-mat4.lookAt(viewMatrix, [0, 0, 2], [0, 0, 0], [0, 1, 0]) // out eye center up
+mat4.lookAt(viewMatrix, [0, 0, 10], [0, 0, 0], [0, 0, 0]) // out eye center up
 
 var drawCube
 
@@ -123,7 +146,7 @@ function render() { // draw()
     }
     /*/
     if (drawCube != undefined) {
-        let num = 80;
+        let num = 80; // 80
         let num2 = 1;
         let scale = 2;
         let start = num / 2*scale -1;
