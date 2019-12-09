@@ -36,6 +36,7 @@
     "start11": "budo index11.js --live -- -t babelify",
     "start12": "budo index12.js --live -- -t babelify",
     "start13": "budo index13.js --live -- -t babelify",
+    "start14": "budo index14.js --live -- -t babelify",
     "texture": "budo texture.js --live -- -t babelify",
     "wire": "budo wireframe.js --live -- -t babelify",
     "line": "budo element.js --live -- -t babelify",
