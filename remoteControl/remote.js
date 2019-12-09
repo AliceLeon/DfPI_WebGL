@@ -82,12 +82,3 @@ window.addEventListener('touchmove', (e) => {
     e.preventDefault()
   }
 }, false)
-
-// window.ondeviceorientationabsolute = (e) => {
-//   // console.log('orientation absolute', e.alpha, e.beta, e.gamma)
-//   socket.emit('tilt', {
-//     alpha: e.alpha,
-//     beta: e.beta,
-//     gamma: e.gamma
-//   })
-// }

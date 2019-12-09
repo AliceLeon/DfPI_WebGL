@@ -40,60 +40,68 @@ var drawCube
 // load and give the model custom attributes.
 loadObj('./assets/10.obj', function (obj) {
     
-    var newPosition = [];
-    var newUV = [];
+    // buffer for attributes.
+    // positions, translate, radius, color,and numinstance for total number
+    var newPosition = []; 
     var newTranslate = [];
     var newR = [];
     var newColor = [];
     var numInstance = 0;
 
+    // num of layers
     let num = 10;
+    // to calculate the position
     let scale = 2;
+
+    // starting positions
     let start1 = num / 2 * scale - 10;
 
     for (let i = 0; i < num; i++) {
         for (var k = 0; k < obj.positions.length; k++) {
-            // copy all the position / uvs
+            // copy the positions 
             newPosition.push(obj.positions[k])
-            newUV.push(obj.uvs[k])
+
+            // add new radius / color / translate as attribute
             var tempR = i * 2
             newR.push(tempR)
             var colornw = [1., 1., 1.]
             newColor.push(colornw)
-            // add new translate as attribute
             var translate = [0, 0, -start1 + i * scale / 50.]
             newTranslate.push(translate)
         }
 
-        numInstance++;
+        numInstance++; // counting total number
     }
+
     // create the attributes
     var attributes = {
         aPosition: regl.buffer(newPosition),
-        aUV: regl.buffer(newUV),
         aColor: regl.buffer(newColor),
         aR: regl.buffer(newR),
         aTranslate: regl.buffer(newTranslate)
     }
 
-    // create our draw call
+    // create draw call
     drawCube = regl({
         uniforms: {
+            // using time to control the wave of the deform
             uTime: regl.prop('time'),
+            // using camera / positions
             uProjectionMatrix: regl.prop('projection'),
             uViewMatrix: regl.prop('view'),
             uTranslate: regl.prop('translate'),
-            uColor: regl.prop('color'),
-            uR: regl.prop('r'),
+            // other uniforms: color, mouse position
             uMouseVX: regl.prop('mouseVX'),
             uMouseVY: regl.prop('mouseVY')
         },
+        // setting shaders, attribute, count.
         vert: vertexShader,
         frag: fragShader,
         attributes: attributes,
         count: obj.count * numInstance,
+        // enabling transparency to create control the number of layers we see.
         depth: {
-            enable: true // transparent
+            enable: true 
         },
         blend: {
             enable: true,
@@ -107,6 +115,7 @@ loadObj('./assets/10.obj', function (obj) {
     })
 })
 
+// using mapping function by lovely Wen
 function map(value, start, end, newStart, newEnd) {
     var percent = (value - start) / (end - start)
     if (percent < 0) {
@@ -123,26 +132,29 @@ function map(value, start, end, newStart, newEnd) {
 var mouseX = 0
 var mouseY = 0
 
+// listening to touching from server
 socket.on('touching', function (o) {
     mouseX = map(o.x,0,1,-1,1);
     mouseY = map(o.y,0,1,-1,1);
 })
 
+// clear the canvas
 function clear() {
     regl.clear({
         color: bg
     })
 }
-
-function render() { // draw()
-    currTime += 0.01;
+// draw everything
+function render() { 
+    currTime += 0.01; // updating time
+    // clear the canvas
     clear()
     if (drawCube != undefined) {
+        // pushing the values wee need.
         var obj = {
             time: currTime,
             projection: projectionMatrix,
             view: viewMatrix,
-            r: 1,
             mouseVY: mouseY,
             mouseVX: mouseX,
         }

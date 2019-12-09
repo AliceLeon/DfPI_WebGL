@@ -27,7 +27,6 @@ function _onConnected (socket) {
   socket.on('disconnect', () => _onDisconnected())
 
   dispatch(socket, 'cameramove')
-  dispatch(socket, 'tilt')
   dispatch(socket, 'touching')
 }
 
